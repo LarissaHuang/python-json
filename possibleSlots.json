@@ -1,12 +1,14 @@
 {
     "possibleSlots": [
         {
-            "startTime": "2021-04-01T09:00:00Z",
-            "endTime": "2021-04-01T09:30:00Z"
+            "id": 6,
+            "startTime": "Apr 1 2021  9:00AM",
+            "endTime": "Apr 1 2021  10:00AM"
         },
         {
-            "startTime": "2021-04-01T04:00:00Z",
-            "endTime": "2021-04-01T04:30:00Z"
+            "id": 7,
+            "startTime": "Apr 1 2021  3:00PM",
+            "endTime": "Apr 1 2021  4:00PM"
         }
     ]
 }

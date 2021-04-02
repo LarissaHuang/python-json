@@ -2,23 +2,46 @@
     "employees": [
         {
             "id": 1,
-            "name": "Amy"
+            "name": "Amy",
+            "meetings": [
+                4,
+                5,
+                6
+            ]
         },
         {
             "id": 2,
-            "name": "Ben"
+            "name": "Ben",
+            "meetings": [
+                4,
+                5,
+                6
+            ]
         },
         {
             "id": 3,
-            "name": "Cal"
+            "name": "Cal",
+            "meetings": [
+                4,
+                5,
+                6
+            ]
         },
         {
             "id": 4,
-            "name": "Dora"
+            "name": "Dora",
+            "meetings": [
+                4,
+                5
+            ]
         },
         {
             "id": 5,
-            "name": "Edna"
+            "name": "Edna",
+            "meetings": [
+                4,
+                5
+            ]
         }
     ]
 }
