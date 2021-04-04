@@ -1,0 +1,22 @@
+{
+    "schedule": [
+        {
+            "startTime": "2021-01-01  9:45 AM",
+            "endTime": "2021-01-01  10:00 AM",
+            "participants": "Jade",
+            "description": "Daily standup"
+        },
+        {
+            "startTime": "2021-01-01  10:00 AM",
+            "endTime": "2021-01-01  11:00 AM",
+            "participants": "Mike",
+            "description": "Second standup"
+        },
+        {
+            "startTime": "2021-01-01  11:00 AM",
+            "endTime": "2021-01-01  11:30 AM",
+            "participants": "Bob",
+            "description": "Third standup"
+        }
+    ]
+}
