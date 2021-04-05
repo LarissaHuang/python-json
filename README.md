@@ -5,10 +5,11 @@
 This Python script checks the availability of team members over the course of one working day, returning the participants that are available for a meeting, and those who cannot attend.
 
 ### Prerequisites
-
+```
 python 3
 pip3
 Flask
+```
 
 Be sure to have Flask installed with 
 
