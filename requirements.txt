@@ -6,8 +6,6 @@ certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
 Flask==1.1.2
-Flask-Session==0.3.2
-Flask-SQLAlchemy==2.5.1
 greenlet==1.0.0
 idna==2.10
 isort==5.8.0
@@ -17,8 +15,6 @@ lazy-object-proxy==1.6.0
 MarkupSafe==1.1.1
 mccabe==0.6.1
 mypy-extensions==0.4.3
-mysql-connector==2.2.9
-mysql-connector-python==8.0.23
 numpy==1.20.2
 pathspec==0.8.1
 protobuf==3.15.6
@@ -26,7 +22,6 @@ pylint==2.7.2
 regex==2021.3.17
 requests==2.25.1
 six==1.15.0
-SQLAlchemy==1.4.3
 toml==0.10.2
 typed-ast==1.4.2
 typing-extensions==3.7.4.3
