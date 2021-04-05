@@ -8,11 +8,9 @@ from flask import request, jsonify
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-# Create some test data for our catalog in the form of a list of dictionaries.
-# http://api.example.com/resources/books?id=10
 
-
-# http://127.0.0.1:5000/api/availability?date=2021-01-01&duration=30
+# sample request
+# 127.0.0.1:5000/api/availability?date=2021-01-01&duration=30
 @app.route("/api/availability", methods=["GET"])
 def availability():
 
@@ -142,13 +140,11 @@ def addBusyBlock():
         schedule_list = scheduleData["schedule"]
         schedule_list.append(schedule)
 
+    # TODO: find out why the append to json file does not work
     with open("schedule.json", "w+") as jsonFile:
         scheduleData = json.load(jsonFile)
-
         schedule_list = scheduleData["schedule"]
-
         schedule_list.append(schedule)
-
         json.dump(schedule, jsonFile)
 
 
