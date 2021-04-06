@@ -1,5 +1,7 @@
 import flask
+from flask import request
 import json
+
 
 import numpy as np
 from datetime import datetime, timedelta
@@ -38,6 +40,17 @@ def availability():
 
     possibleSlots = []
 
+    best_count = -1
+
+    bestSlot = dict()
+    bestSlot["startTime"] = ""
+    bestSlot["endTime"] = ""
+    bestSlot["participants"] = []
+    bestSlot["cannotAttend"] = []
+
+    # if count > bestcount
+    # replace bestcount and bestslot
+
     for possibleStartTime in possibleStartTimes:
         possibleEndTime = possibleStartTime + meetingInterval
         # initialization of dictionary
@@ -54,11 +67,11 @@ def availability():
 
         for schedule in scheduleData["schedule"]:
             busyBlockStart = datetime.strptime(
-                schedule["startTime"], "%Y-%m-%d %I:%M %p"
+                schedule["startTime"], "%Y-%m-%d  %I:%M %p"
             )
 
             # print("busy block start", busyBlockStart)
-            busyBlockEnd = datetime.strptime(schedule["endTime"], "%Y-%m-%d %I:%M %p")
+            busyBlockEnd = datetime.strptime(schedule["endTime"], "%Y-%m-%d  %I:%M %p")
 
             # initialize overlap as false
             overlap = False
@@ -86,7 +99,13 @@ def availability():
 
                 possibleSlot["participants"].append(schedule["participants"])
 
-        possibleSlots.append(possibleSlot)
+            count = len(possibleSlot["participants"])
+
+            if count > best_count:
+                bestSlot = possibleSlot
+                best_count = count
+
+            possibleSlots.append(possibleSlot)
 
     # print("possible slots", possibleSlots)
     final_dict = dict()
@@ -96,56 +115,49 @@ def availability():
     final_dict["possibleSlot"] = possibleSlots
     print(final_dict)
 
-    return jsonify(final_dict, max_parti)
+    with open("bestSlot.json", "r") as f:
+        bestSlotData = json.load(f)
+
+    final_best_slot = dict()
+    final_best_slot["best_slot"] = bestSlot
+
+    with open("bestSlot.json", "w") as f:
+        json.dump(bestSlotData, f)
+
+    return jsonify(final_dict, bestSlot)
+
+
+# Finding best slot
 
 
 # 127.0.0.1:5000/api/schedule?start=2021-01-01%20%2009:45%20AM&end=2021-01-01%20%2010:15%20AM&name=Jade&desc=Daily%20standup
 
 
-@app.route("/api/schedule", methods=["POST"])
+@app.route("/api/schedule", methods=["GET", "POST"])
 def addBusyBlock():
 
-    if "start" in request.args:
-        start = str(request.args["start"])
-    else:
-        return "Error: No start field provided. Please specify a start time."
+    # import urllib.request
 
-    if "end" in request.args:
-        end = str(request.args["end"])
-    else:
-        return "Error: No end field provided. Please specify an end time."
-
-    if "name" in request.args:
-        name = str(request.args["name"])
-    else:
-        return "Error: No name field provided. Please specify a name."
-
-    if "desc" in request.args:
-        desc = str(request.args["desc"])
-    else:
-        return "Error: No desc field provided. Please specify an desc time."
-
-    return "<h1>added successfully</h1>"
+    # webUrl = urllib.request.urlopen("/api/schedule")
 
     # initialize schedule as dictionary
     schedule = dict()
-    schedule["startTime"] = start
-    schedule["endTime"] = end
-    schedule["participants"] = name
-    schedule["description"] = desc
+    schedule["startTime"] = "2021-01-01  9:45 AM"
+    schedule["endTime"] = "2021-01-01  10:45 AM"
+    schedule["participants"] = "Mo"
+    schedule["description"] = "another standup"
 
-    with open("schedule.json", "w") as f:
+    with open("schedule.json", "r") as f:
         scheduleData = json.load(f)
 
-        schedule_list = scheduleData["schedule"]
-        schedule_list.append(schedule)
+    schedule_list = scheduleData["schedule"]
+    schedule_list.append(schedule)
+    scheduleData["schedule"] = schedule_list
 
-    # TODO: find out why the append to json file does not work
     with open("schedule.json", "w+") as jsonFile:
-        scheduleData = json.load(jsonFile)
-        schedule_list = scheduleData["schedule"]
-        schedule_list.append(schedule)
-        json.dump(schedule, jsonFile)
+        json.dump(scheduleData, jsonFile)
+
+    return jsonify(scheduleData)
 
 
 @app.route("/", methods=["GET"])
