@@ -11,20 +11,16 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 
-# sample request
-# 127.0.0.1:5000/api/availability?date=2021-01-01&duration=30
-@app.route("/api/availability", methods=["GET"])
-def availability():
-
-    if "date" in request.args:
-        date = str(request.args["date"])
-    else:
-        return "Error: No date field provided. Please specify a date."
-
-    if "duration" in request.args:
-        duration = int(request.args["duration"])
-    else:
-        return "Error: No duration field provided. Please specify a duration."
+def _find_availability(date, duration):
+    # if "date" in request.args:
+    #     date = str(request.args["date"])
+    # else:
+    #     return "Error: No date field provided. Please specify a date."
+    #
+    # if "duration" in request.args:
+    #     duration = int(request.args["duration"])
+    # else:
+    #     return "Error: No duration field provided. Please specify a duration."
 
     startDateTime = date + " 9:00 AM"
     endDateTime = date + " 5:00 PM"
@@ -122,22 +118,41 @@ def availability():
     with open("bestSlot.json", "w") as f:
         json.dump(bestSlotData, f)
 
+    return final_dict, bestSlot
+
+
+# sample request
+# 127.0.0.1:5000/api/availability?date=2021-01-01&duration=30
+@app.route("/api/availability", methods=["GET"])
+def availability():
+
+    if "date" in request.args:
+        date = str(request.args["date"])
+    else:
+        return "Error: No date field provided. Please specify a date."
+
+    if "duration" in request.args:
+        duration = int(request.args["duration"])
+    else:
+        return "Error: No duration field provided. Please specify a duration."
+
+    final_dict, bestSlot = _find_availability(date, duration)
+
     return jsonify("possible slots", final_dict, "best slot", bestSlot)
 
 
 # 127.0.0.1:5000/api/schedule?start=2021-01-01%20%2009:45%20AM&end=2021-01-01%20%2010:15%20AM&name=Jade&desc=Daily%20standup
-@app.route("/api/schedule", methods=["POST"])
+@app.route("/api/schedule", methods=["GET", "POST"])
 def addBusyBlock():
-
-    data = request.json
+    data = request.args
     print("data", data)
 
     # initialize schedule as dictionary
     schedule = dict()
-    schedule["startTime"] = data["startTime"]
-    schedule["endTime"] = data["endTime"]
-    schedule["participants"] = data["participants"]
-    schedule["description"] = data["description"]
+    schedule["startTime"] = data["start"]
+    schedule["endTime"] = data["end"]
+    schedule["participants"] = data["name"]
+    schedule["description"] = data["desc"]
 
     with open("schedule.json", "r") as f:
         scheduleData = json.load(f)
@@ -151,7 +166,21 @@ def addBusyBlock():
     with open("schedule.json", "w+") as jsonFile:
         json.dump(scheduleData, jsonFile)
 
-    return jsonify(scheduleData)
+    date = None
+    duration = None
+    bestSlot = None
+    if "date" in request.args:
+        date = str(request.args["date"])
+    if "duration" in request.args:
+        duration = int(request.args["duration"])
+    if date and duration:
+        final_dict, bestSlot = _find_availability(date, duration)
+
+    if bestSlot:
+        return jsonify(
+            "Added data:", schedule, "All data", scheduleData, "Best Slot", bestSlot
+        )
+    return jsonify("Added data:", schedule, "All data", scheduleData)
 
 
 @app.route("/", methods=["GET"])
