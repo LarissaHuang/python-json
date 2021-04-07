@@ -40,6 +40,7 @@ def availability():
 
     possibleSlots = []
 
+    # initialize best_count as -1
     best_count = -1
 
     bestSlot = dict()
@@ -47,9 +48,6 @@ def availability():
     bestSlot["endTime"] = ""
     bestSlot["participants"] = []
     bestSlot["cannotAttend"] = []
-
-    # if count > bestcount
-    # replace bestcount and bestslot
 
     for possibleStartTime in possibleStartTimes:
         possibleEndTime = possibleStartTime + meetingInterval
@@ -105,14 +103,14 @@ def availability():
                 bestSlot = possibleSlot
                 best_count = count
 
-            possibleSlots.append(possibleSlot)
+            if possibleSlot not in possibleSlots:
+                possibleSlots.append(possibleSlot)
 
     # print("possible slots", possibleSlots)
     final_dict = dict()
-    max_parti = len(possibleSlot["cannotAttend"])
 
     print("final dictionary created")
-    final_dict["possibleSlot"] = possibleSlots
+    final_dict["possibleSlots"] = possibleSlots
     print(final_dict)
 
     with open("bestSlot.json", "r") as f:
@@ -124,35 +122,31 @@ def availability():
     with open("bestSlot.json", "w") as f:
         json.dump(bestSlotData, f)
 
-    return jsonify(final_dict, bestSlot)
-
-
-# Finding best slot
+    return jsonify("possible slots", final_dict, "best slot", bestSlot)
 
 
 # 127.0.0.1:5000/api/schedule?start=2021-01-01%20%2009:45%20AM&end=2021-01-01%20%2010:15%20AM&name=Jade&desc=Daily%20standup
-
-
-@app.route("/api/schedule", methods=["GET", "POST"])
+@app.route("/api/schedule", methods=["POST"])
 def addBusyBlock():
 
-    # import urllib.request
-
-    # webUrl = urllib.request.urlopen("/api/schedule")
+    data = request.json
+    print("data", data)
 
     # initialize schedule as dictionary
     schedule = dict()
-    schedule["startTime"] = "2021-01-01  9:45 AM"
-    schedule["endTime"] = "2021-01-01  10:45 AM"
-    schedule["participants"] = "Mo"
-    schedule["description"] = "another standup"
+    schedule["startTime"] = data["startTime"]
+    schedule["endTime"] = data["endTime"]
+    schedule["participants"] = data["participants"]
+    schedule["description"] = data["description"]
 
     with open("schedule.json", "r") as f:
         scheduleData = json.load(f)
 
     schedule_list = scheduleData["schedule"]
-    schedule_list.append(schedule)
-    scheduleData["schedule"] = schedule_list
+
+    if schedule not in schedule_list:
+        schedule_list.append(schedule)
+        scheduleData["schedule"] = schedule_list
 
     with open("schedule.json", "w+") as jsonFile:
         json.dump(scheduleData, jsonFile)
