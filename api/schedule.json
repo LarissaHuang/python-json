@@ -1,1 +1,40 @@
-{"schedule": [{"startTime": "2021-01-01  9:45 AM", "endTime": "2021-01-01  10:00 AM", "participants": "Jade", "description": "Daily standup"}, {"startTime": "2021-01-01  10:00 AM", "endTime": "2021-01-01  11:00 AM", "participants": "Mike", "description": "Second standup"}, {"startTime": "2021-01-01  11:00 AM", "endTime": "2021-01-01  11:30 AM", "participants": "Bob", "description": "Third standup"}, {"startTime": "2021-01-01  09:45 AM", "endTime": "2021-01-01  10:15 AM", "participants": "Jade", "description": "Daily standup"}, {"startTime": "2021-01-01  09:45 AM", "endTime": "2021-01-01  10:15 AM", "participants": "Larissa", "description": "Daily standup"}]}
+{
+    "schedule": [
+        {
+            "startTime": "2021-01-01T09:45:00",
+            "endTime": "2021-01-01T10:00:00",
+            "participants": [
+                "Mike",
+                "Bob"
+            ],
+            "description": "Daily standup"
+        },
+        {
+            "startTime": "2021-01-01T10:00:00",
+            "endTime": "2021-01-01T11:00:00",
+            "participants": [
+                "Jade",
+                "Bob"
+            ],
+            "description": "Second standup"
+        },
+        {
+            "startTime": "2021-01-01T11:00:00",
+            "endTime": "2021-01-01T11:30:00",
+            "participants": [
+                "Bob",
+                "Jade"
+            ],
+            "description": "Third standup"
+        },
+        {
+            "startTime": "2021-01-01T16:15:00",
+            "endTime": "2021-01-01T16:45:00",
+            "participants": [
+                "Larissa",
+                "Bob"
+            ],
+            "description": "Code review"
+        }
+    ]
+}

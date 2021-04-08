@@ -12,21 +12,12 @@ app.config["DEBUG"] = True
 
 
 def _find_availability(date, duration):
-    # if "date" in request.args:
-    #     date = str(request.args["date"])
-    # else:
-    #     return "Error: No date field provided. Please specify a date."
-    #
-    # if "duration" in request.args:
-    #     duration = int(request.args["duration"])
-    # else:
-    #     return "Error: No duration field provided. Please specify a duration."
 
-    startDateTime = date + " 9:00 AM"
-    endDateTime = date + " 5:00 PM"
+    startDateTime = date + "T09:00:00"
+    endDateTime = date + "T17:00:00"
 
-    dayStart = datetime.strptime(startDateTime, "%Y-%m-%d %I:%M %p")
-    dayEnd = datetime.strptime(endDateTime, "%Y-%m-%d %I:%M %p")
+    dayStart = datetime.strptime(startDateTime, "%Y-%m-%dT%H:%M:%S")
+    dayEnd = datetime.strptime(endDateTime, "%Y-%m-%dT%H:%M:%S")
 
     interval = timedelta(minutes=15)
 
@@ -61,11 +52,11 @@ def _find_availability(date, duration):
 
         for schedule in scheduleData["schedule"]:
             busyBlockStart = datetime.strptime(
-                schedule["startTime"], "%Y-%m-%d  %I:%M %p"
+                schedule["startTime"], "%Y-%m-%dT%H:%M:%S"
             )
 
             # print("busy block start", busyBlockStart)
-            busyBlockEnd = datetime.strptime(schedule["endTime"], "%Y-%m-%d  %I:%M %p")
+            busyBlockEnd = datetime.strptime(schedule["endTime"], "%Y-%m-%dT%H:%M:%S")
 
             # initialize overlap as false
             overlap = False
@@ -73,16 +64,15 @@ def _find_availability(date, duration):
             print("begin overlap check")
             t = busyBlockStart
             while t <= busyBlockEnd:
-                #   if t >= possibleStart and t <= possibleEnd:
                 if t >= possibleStartTime and t <= possibleEndTime:
                     overlap = True
-                    possibleSlot["cannotAttend"].append(schedule["participants"])
+                    possibleSlot["cannotAttend"].append(schedule["participants"][0])
                     print(
-                        "this person is busy for time block of",
+                        "these team members are busy during",
                         possibleStartTime,
                         possibleEndTime,
                     )
-                    print("this person added to the cannotAttend list")
+                    print("added to the cannotAttend list")
                     break
 
                 # increment time by 15 minutes
@@ -91,7 +81,7 @@ def _find_availability(date, duration):
             if overlap == False:
                 print("employee added in participants list")
 
-                possibleSlot["participants"].append(schedule["participants"])
+                possibleSlot["participants"].append(schedule["participants"][0])
 
             count = len(possibleSlot["participants"])
 
@@ -138,10 +128,14 @@ def availability():
 
     final_dict, bestSlot = _find_availability(date, duration)
 
-    return jsonify("possible slots", final_dict, "best slot", bestSlot)
+    return jsonify(
+        final_dict,
+        "best slot",
+        bestSlot,
+    )
 
 
-# 127.0.0.1:5000/api/schedule?start=2021-01-01%20%2009:45%20AM&end=2021-01-01%20%2010:15%20AM&name=Jade&desc=Daily%20standup
+# 127.0.0.1:5000/api/schedule?start=2021-01-01T09:00:00&end=2021-01-01T09:30:00&name=Larissa&desc=Intro%20standup
 @app.route("/api/schedule", methods=["GET", "POST"])
 def addBusyBlock():
     data = request.args
