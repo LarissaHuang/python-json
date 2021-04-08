@@ -9,6 +9,7 @@ from flask import request, jsonify
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+app.config["JSON_SORT_KEYS"] = False
 
 
 def _find_availability(date, duration):
@@ -135,7 +136,7 @@ def availability():
     )
 
 
-# 127.0.0.1:5000/api/schedule?start=2021-01-01T09:00:00&end=2021-01-01T09:30:00&name=Larissa&desc=Intro%20standup
+# http://127.0.0.1:5000/api/schedule?start=2021-01-01T09:00:00&end=2021-01-01T09:30:00&name=Larissa&desc=Intro%20standup
 @app.route("/api/schedule", methods=["GET", "POST"])
 def addBusyBlock():
     data = request.args

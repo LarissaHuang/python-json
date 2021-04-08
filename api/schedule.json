@@ -5,7 +5,9 @@
             "endTime": "2021-01-01T10:00:00",
             "participants": [
                 "Mike",
-                "Bob"
+                "Jade",
+                "Bob",
+                "Larissa"
             ],
             "description": "Daily standup"
         },
@@ -35,6 +37,12 @@
                 "Bob"
             ],
             "description": "Code review"
+        },
+        {
+            "startTime": "2021-01-01T09:00:00",
+            "endTime": "2021-01-01T09:30:00",
+            "participants": "Larissa",
+            "description": "Intro standup"
         }
     ]
 }
