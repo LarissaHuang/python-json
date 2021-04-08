@@ -136,7 +136,7 @@ def availability():
     )
 
 
-# http://127.0.0.1:5000/api/schedule?start=2021-01-01T09:00:00&end=2021-01-01T09:30:00&name=Larissa&desc=Intro%20standup
+# http://127.0.0.1:5000/api/schedule?startTime=2021-01-01T09:00:00&endTime=2021-01-01T09:30:00&name=Larissa&description=Intro%20standup
 @app.route("/api/schedule", methods=["GET", "POST"])
 def addBusyBlock():
     data = request.args
@@ -144,10 +144,10 @@ def addBusyBlock():
 
     # initialize schedule as dictionary
     schedule = dict()
-    schedule["startTime"] = data["start"]
-    schedule["endTime"] = data["end"]
+    schedule["startTime"] = data["startTime"]
+    schedule["endTime"] = data["endTime"]
     schedule["participants"] = data["name"]
-    schedule["description"] = data["desc"]
+    schedule["description"] = data["description"]
 
     with open("schedule.json", "r") as f:
         scheduleData = json.load(f)
